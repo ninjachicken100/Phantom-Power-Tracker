@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #000000;
+  --foreground: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff; 
+    --foreground: #000000;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar-look {
+  background-color: #0e4437;
+  font-size: 2.5rem;
+  text-align: left;
+  color: white;
+  background-color: #0e4437;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center items vertically */
+  padding: 1rem;
+  width: 100%; /* Ensure the navbar spans the full width */
+  height: 200px; /* Fixed height */
+  position: relative; /* Required for next/image layout="fill" */
+}
+
+.room-component-padding {
+  padding: 1rem; /* Adjust the padding value as needed */
+}
+
+.rounded-rectangle {
+  position: relative; /* Required for next/image layout="fill" */
+  width: calc(100% - 2rem); /* Full width minus left and right padding */
+  height: 200px; /* Adjust height */
+  background-color: white; /* Background color */
+  color: black; /* Text color */
+  text-align: left; /* Align text to the left */
+  font-size: 1.5rem; /* Adjust text size */
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  padding-left: 1rem; 
+  padding-right: 1rem; 
+  margin: 0 auto; /* Center the element horizontally */
+  overflow: hidden; /* Ensure content stays within the rounded corners */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark translucent overlay */
+  z-index: 1;
+}
+
+.room-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 2rem;
+  z-index: 2; /* Ensure the text is above the overlay */
+  color: white; /* Adjust text color for better visibility */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow for better readability */
+}
+
+.add-room-container {
+  width: 100px; /* Full width minus left and right padding */
+  height: auto; /* Adjust height */
+  line-height: 12rem; /* Center text vertically */
+  padding-left: 1rem; 
+  padding-right: 1rem; 
+  margin: 0 auto; /* Center the element horizontally */
+}
+
+.footer-container {
+  width: 100%; /* Full width minus left and right padding */
+  height: auto; /* Adjust height */
+  line-height: 12rem; /* Center text vertically */
+  padding-left: 1rem; 
+  padding-right: 1rem; 
+  margin: 0 auto; /* Center the element horizontally */
+}
+
+.appliance-rectangle {
+  position: relative; /* Required for next/image layout="fill" */
+  width: calc(100% - 2rem); /* Full width minus left and right padding */
+  height: auto; /* Adjust height */
+  background-color: blue; /* Background color */
+  color: black; /* Text color */
+  text-align: left; /* Align text to the left */
+  font-size: 1rem; /* Adjust text size */
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  padding-left: 1rem; 
+  padding-right: 1rem; 
+  margin: 0 auto; /* Center the element horizontally */
+  overflow: hidden; /* Ensure content stays within the rounded corners */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+}
+
+
+/* Toggle Switch */
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #0e4437;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #1f8a71;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%; 
+}
+
+/* modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+}
