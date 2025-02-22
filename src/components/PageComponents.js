@@ -151,7 +151,7 @@ export function ApplianceComponent({ applianceObject }) {
     try {
       console.log("1");
       const res = await fetch('/api/updateDB.js', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
