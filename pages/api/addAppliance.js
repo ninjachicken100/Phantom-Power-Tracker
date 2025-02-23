@@ -20,8 +20,8 @@ export default async function handler(req, res) {
             // Choose a name for your collection
             const collection = database.collection("familyappliances");
 
-            // Insert the new appliance with switch set to false
-            await collection.insertOne({ owner, appliance, switch: false });
+            // Insert the new appliance with switch set to false and lastSwitchedOn set to null
+            await collection.insertOne({ owner, appliance, switch: false, lastSwitchedOn: null });
 
             res.status(201).json({ message: "Appliance added successfully!" });
         } catch (error) {

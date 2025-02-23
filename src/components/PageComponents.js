@@ -6,7 +6,6 @@ import Logo from './logo.png';
 import GIF from './turnoff.gif';
 import { useState } from 'react';
 
-
 export default function NavbarComponent() {
     return (
       <div>
@@ -51,33 +50,39 @@ export function AddApplianceModal({ isOpen, onClose, onSubmit }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <div>
+        <div className="modal-header">
           <h2>Add Appliance</h2>
         </div>
         
-        <form onSubmit={handleSubmit}>
-          <label>
+        <form onSubmit={handleSubmit} >
+          <div className='owner-label'>
             Owner:
-            <select value={owner} onChange={(e) => setOwner(e.target.value)} required>
-              <option value="">Select Owner</option>
-              <option value="parents">Parents</option>
-              <option value="mom">Mom</option>
-              <option value="dad">Dad</option>
-              <option value="brother 1">Brother 1</option>
-              <option value="brother 2">Brother 2</option>
-            </select>
-          </label>
-          <label>
+          </div>
+          <select value={owner} onChange={(e) => setOwner(e.target.value)} required >
+            <option value="parents">Parents</option>
+            <option value="mom">Mom</option>
+            <option value="dad">Dad</option>
+            <option value="brother 1">Brother 1</option>
+            <option value="brother 2">Brother 2</option>
+          </select>
+          
+          <label className='owner-label'>
             Appliance:
-            <input
-              type="text"
-              value={appliance}
-              onChange={(e) => setAppliance(e.target.value)}
-              required
-            />
           </label>
-          <button type="submit">Add</button>
-          <button type="button" onClick={onClose}>Cancel</button>
+          <input
+            type="text"
+            value={appliance}
+            onChange={(e) => setAppliance(e.target.value)}
+            required
+            placeholder="e.g. lights, fans .."
+            className="bg-gray-200 placeholder-gray-600"
+          />
+          
+          <br />
+          <div className="modal-buttons">
+            <button type="submit">Add</button>
+            <button type="button" onClick={onClose}>Cancel</button>
+          </div>
         </form>
       </div>
     </div>
@@ -140,28 +145,32 @@ export function FooterComponent() {
 
 
 export function ApplianceComponent({ applianceObject }) {
-  const { owner, appliance } = applianceObject;
+  const { id, owner, appliance } = applianceObject;
   const [isSwitchOn, setIsSwitchOn] = useState(applianceObject.switch);
+  // console.log(isSwitchOn);
+  console.log('ApplianceComponent received id:', id); // Log the received id
 
   const toggleSwitch = async () => {
     const newSwitchState = !isSwitchOn;
     setIsSwitchOn(newSwitchState);
     console.log("newSwitchState", newSwitchState);
 
+    const data = {
+      id: id,
+      switchState: newSwitchState,
+      lastSwitchedOn: newSwitchState ? new Date() : applianceObject.lastSwitchedOn
+    };
+    console.log("data", data);
+
     try {
-      console.log("1");
-      const res = await fetch('/api/updateDB.js', {
+      const res = await fetch('/api/updateDB', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ owner: owner, appliance: appliance, switchState: newSwitchState }),
+        body: JSON.stringify(data),
       });
-      console.log("2");
 
-      if (!res.ok) {
-        throw new Error('Failed to update switch');
-      }
 
       const updatedItem = await res.json();
       console.log('Updated item:', updatedItem);
@@ -172,12 +181,13 @@ export function ApplianceComponent({ applianceObject }) {
   };
 
   return (
-    <div>
-      <p>Owner: {owner}</p>
-      <p>Appliance: {appliance}</p>
-      <p>
-        Switch: {isSwitchOn ? 'On' : 'Off'}
-        <br />
+    <div className="appliance-container">
+      <div className="appliance-info">
+        <p>Owner: {owner}</p>
+        <p>Appliance: {appliance}</p>
+        <p>Switch: {isSwitchOn ? 'On' : 'Off'}</p>
+      </div>
+      <div className="appliance-switch">
         <label className="switch">
           <input 
             type="checkbox" 
@@ -186,7 +196,7 @@ export function ApplianceComponent({ applianceObject }) {
           />
           <span className="slider round"></span>
         </label>
-      </p>
+      </div>
     </div>
   );
 }
