@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "owner": "mom",
+    "appliance": "phone charger",
+    "switch": false,
+    "lastSwitchedOn": null
+  },
+  {
+    "id": 2,
+    "owner": "dad",
+    "appliance": "phone charger",
+    "switch": false,
+    "lastSwitchedOn": null
+  },
+  {
+    "id": 3,
+    "owner": "parents",
+    "appliance": "heater",
+    "switch": false,
+    "lastSwitchedOn": null
+  },
+  {
+    "id": 4,
+    "owner": "older brother",
+    "appliance": "phone charger",
+    "switch": false,
+    "lastSwitchedOn": null
+  },
+  {
+    "id": 5,
+    "owner": "older brother",
+    "appliance": "laptop charger",
+    "switch": false,
+    "lastSwitchedOn": null
+  },
+  {
+    "id": 6,
+    "owner": "younger brother",
+    "appliance": "charger",
+    "switch": false,
+    "lastSwitchedOn": null
+  },
+  {
+    "id": 7,
+    "owner": "younger brother",
+    "appliance": "laptop charger",
+    "switch": false,
+    "lastSwitchedOn": null
+  }
+]

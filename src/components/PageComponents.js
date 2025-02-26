@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Add from './add.png';
 import Logo from './logo.png';
 import GIF from './turnoff.gif';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function NavbarComponent() {
     return (
@@ -34,7 +34,7 @@ export function RoomComponent({ room, image }) {
 }
 
 export function AddApplianceModal({ isOpen, onClose, onSubmit }) {
-  const [owner, setOwner] = useState('');
+  const [owner, setOwner] = useState('parents');
   const [appliance, setAppliance] = useState('');
 
   const handleSubmit = (e) => {
@@ -55,18 +55,18 @@ export function AddApplianceModal({ isOpen, onClose, onSubmit }) {
         </div>
         
         <form onSubmit={handleSubmit} >
-          <div className='owner-label'>
+          <label >
             Owner:
-          </div>
+          </label>
           <select value={owner} onChange={(e) => setOwner(e.target.value)} required >
             <option value="parents">Parents</option>
             <option value="mom">Mom</option>
             <option value="dad">Dad</option>
-            <option value="brother 1">Brother 1</option>
-            <option value="brother 2">Brother 2</option>
+            <option value="younger bro">younger brother</option>
+            <option value="older bro">older brother</option>
           </select>
           
-          <label className='owner-label'>
+          <label >
             Appliance:
           </label>
           <input
@@ -144,11 +144,10 @@ export function FooterComponent() {
 }
 
 
-export function ApplianceComponent({ applianceObject }) {
+export function ApplianceComponent({ applianceObject, onToggleSwitch}) {
   const { id, owner, appliance } = applianceObject;
   const [isSwitchOn, setIsSwitchOn] = useState(applianceObject.switch);
-  // console.log(isSwitchOn);
-  console.log('ApplianceComponent received id:', id); // Log the received id
+  // console.log('ApplianceComponent received id:', id); // Log the received id
 
   const toggleSwitch = async () => {
     const newSwitchState = !isSwitchOn;
@@ -157,6 +156,8 @@ export function ApplianceComponent({ applianceObject }) {
 
     const data = {
       id: id,
+      owner: owner,
+      appliance: appliance,
       switchState: newSwitchState,
       lastSwitchedOn: newSwitchState ? new Date() : applianceObject.lastSwitchedOn
     };
@@ -171,9 +172,7 @@ export function ApplianceComponent({ applianceObject }) {
         body: JSON.stringify(data),
       });
 
-
-      const updatedItem = await res.json();
-      console.log('Updated item:', updatedItem);
+      onToggleSwitch(data);
     } catch (error) {
       console.error('Failed to update switch:', error);
       setIsSwitchOn(!newSwitchState); // Revert the switch state if the update fails
@@ -199,4 +198,65 @@ export function ApplianceComponent({ applianceObject }) {
       </div>
     </div>
   );
+}
+
+
+function sendEmail(owner, appliance) {
+  console.log('sendEmail triggered for:', owner, appliance); // Log the triggered email
+
+  const emailContent = `Hello ${owner},
+
+  The ${appliance} has been on for more than 5 seconds.
+
+  Please turn it off if not in use.`;
+
+
+
+  fetch('/api/sendEmail', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({owner, appliance, emailContent}),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to send email');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Email sent successfully:', data);
+  })
+  .catch(error => {
+    console.error('Error sending email:', error);
+  });
+}
+
+export function ApplianceMonitor({ applianceObject }) {
+  const { owner, appliance, lastSwitchedOn } = applianceObject;
+  const [isSwitchOn] = useState(applianceObject.switch);
+
+  useEffect(() => {
+    if (isSwitchOn) {
+      console.log('switch is on for:', owner, appliance, isSwitchOn, lastSwitchedOn)
+
+      const interval = setInterval(() => {
+        const now = new Date();
+        const timeDiff = now - new Date(lastSwitchedOn);
+        const secondsDiff = timeDiff / 1000; // Calculate the difference in seconds
+        console.log('secondsDiff:', secondsDiff)
+
+        if (secondsDiff > 10) { // Check if the difference is more than 5 seconds
+          console.log('triggering sendEmail for:', owner)
+          sendEmail(owner, appliance);
+          clearInterval(interval);
+        }
+      }, 10000); // , 1800000ms = 30mins, 10000ms = 10s
+
+      return () => clearInterval(interval);
+    }
+  }, [isSwitchOn, lastSwitchedOn, owner, appliance]);
+
+  return null;
 }

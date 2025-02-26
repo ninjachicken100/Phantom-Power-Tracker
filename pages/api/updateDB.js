@@ -30,18 +30,14 @@ export default async function handler(req, res) {
         updateData.lastSwitchedOn = new Date(lastSwitchedOn);
       }
 
-      const result = await collection.findOneAndUpdate(
+      await collection.findOneAndUpdate(
         { id: id },
         { $set: updateData },
         { returnDocument: 'after' } // Use returnDocument: 'after' to return the updated document
       );
 
-      if (!result.value) {
-        console.log("Appliance not found with id:", id);
-        return res.status(404).json({ message: 'Appliance not found' });
-      }
-
-      res.status(200).json(result.value);
+      res.status(200);
+      console.log("Appliance updated successfully:");
     } catch (error) {
       console.error('Error updating appliance:', error); // Log the error
       res.status(500).json({ message: 'Failed to update appliance', error });
