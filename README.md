@@ -9,7 +9,7 @@
 <p> [OPTIONAL] You may upload dummy data into the database using the importFile.json. If you want to create your own, ensure the fields are the same and run the following command on cmd: </p>
 <p>mongoimport --uri "mongodb+srv://<username>:<password>@<cluster_name>.cr8ip.mongodb.net/<project_name>" --collection <collection_name> --file "<path_to_json_file>" --jsonArray</p>
   <br>
-<p> 2.npm install the following libraries: mongoose, nodemailer </p>
+<p> 2.npm install the following libraries: mongoose, nodemailer, npm-fetch </p>
 <p>P.S. If there are any other dependencies that are missing, please install them as well</p> 
   <br>
 <p>3. Duplicate sample.env and rename to .env.local. Fill in the fields with your own credentials </p>

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
         try {
             await client.connect();
-
+            
             // Choose a name for your database
             const database = client.db("PhantomPowerTracker");
 

@@ -2,6 +2,21 @@
 
 import { MongoClient } from "mongodb";
 
+async function getNextSequenceValue(client, sequenceName) {
+    const database = client.db("PhantomPowerTracker");
+    const counters = database.collection("counters");
+    const collection = database.collection("familyappliances");
+  
+    // Find the highest existing id in the familyappliances collection
+    const highestIdDoc = await collection.find().sort({ id: -1 }).limit(1).toArray();
+    const highestId = highestIdDoc.length > 0 ? highestIdDoc[0].id : 0;
+    console.log('highest Id:', highestId);
+    
+    const nextId = highestId + 2;
+    
+    return nextId;
+  }
+
 export default async function handler(req, res) {
     if (req.method === "POST") {
         const { owner, appliance } = req.body;
@@ -14,6 +29,10 @@ export default async function handler(req, res) {
         try {
             await client.connect();
 
+            // Get the next sequence value for the appliance ID
+            const nextid = await getNextSequenceValue(client, "applianceid");
+            console.log("id", nextid);
+
             // Choose a name for your database
             const database = client.db("PhantomPowerTracker");
 
@@ -21,7 +40,7 @@ export default async function handler(req, res) {
             const collection = database.collection("familyappliances");
 
             // Insert the new appliance with switch set to false and lastSwitchedOn set to null
-            await collection.insertOne({ owner, appliance, switch: false, lastSwitchedOn: null });
+            await collection.insertOne({ id:nextid, owner, appliance, switch: false, lastSwitchedOn: null });
 
             res.status(201).json({ message: "Appliance added successfully!" });
         } catch (error) {

@@ -1,36 +1,40 @@
-// filepath: /c:/Users/jiale/OneDrive/Desktop/SMU/Y4S2/IS463-G1-Digi Tech 4 Env Sustainability/Individual Assignment/phantom-power-tracker/mongodb.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
-  );
+  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
+// Use a global variable to cache the connection in development mode
+let cached = global.mongoose || { conn: null, promise: null };
 
 async function dbConnect() {
   if (cached.conn) {
+    console.log("✅ Using existing MongoDB connection");
     return cached.conn;
   }
 
   if (!cached.promise) {
+    console.log("🟡 Establishing a new MongoDB connection...");
     const opts = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
+    try {
+      cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+        console.log("✅ MongoDB connection established!");
+        return mongoose;
+      });
+    } catch (error) {
+      console.error("❌ MongoDB connection error:", error);
+      throw new Error("Failed to connect to MongoDB");
+    }
   }
+
   cached.conn = await cached.promise;
+  global.mongoose = cached; // Ensure global caching
   return cached.conn;
 }
 

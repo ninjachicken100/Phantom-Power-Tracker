@@ -4,11 +4,17 @@ import path from 'path';
 export default async function handler(req, res) {
 
   if (req.method === 'POST') {
-    const { owner, emailContent } = req.body;
+    const { owner, appliance } = req.body;
 
-    console.log('Received request to send email');
-    console.log('Owner:', owner);
-    console.log('Email Content:', emailContent);
+    const emailContent = `
+  <p>Hello ${owner},</p>
+  <p>The <strong>${appliance}</strong> has been turned on <span style="color: red;"><strong>for more than ${timeDiff}</strong></span>.</p>
+  <p><strong>Please turn it off</strong> if not in use.</p>
+  <br>
+  <p>Thank you,</p>
+  <p><strong>Courtesy of PhantomPowerTracker</strong></p>
+`;
+
 
     let recipient;
 
@@ -39,7 +45,7 @@ export default async function handler(req, res) {
       },
     });
 
-    console.log('Transporter created');
+    // console.log('Transporter created');
 
     // Set up email data
     let mailOptions = {
@@ -57,12 +63,13 @@ export default async function handler(req, res) {
       ]
     };
 
-    console.log('Mail options set:', mailOptions);
+    // console.log('Mail options set:', mailOptions);
 
     try {
       // Send mail with defined transport object
       let info = await transporter.sendMail(mailOptions);
-      console.log('Message sent: %s', info.messageId);
+      // console.log('Message sent: %s', info.messageId);
+      console.log('Email sent successfully:');
       res.status(200).json({ message: 'Email sent successfully', info });
     } catch (error) {
       console.error('Error sending email:', error);

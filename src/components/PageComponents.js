@@ -144,10 +144,45 @@ export function FooterComponent() {
 }
 
 
-export function ApplianceComponent({ applianceObject, onToggleSwitch}) {
+export function ApplianceComponent({ applianceObject, onToggleSwitch }) {
   const { id, owner, appliance } = applianceObject;
   const [isSwitchOn, setIsSwitchOn] = useState(applianceObject.switch);
-  // console.log('ApplianceComponent received id:', id); // Log the received id
+
+  useEffect(() => {
+    if (isSwitchOn) {
+      // Call the monitoring API endpoint if the switch is already on
+      const data = {
+        id: id,
+        owner: owner,
+        appliance: appliance,
+        switchState: isSwitchOn,
+        lastSwitchedOn: applianceObject.lastSwitchedOn
+      };
+      console.log("Initial data", data);
+
+      // fetch('/api/monitorAppliance', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(data),
+      // })
+      // .then(response => {
+      //   if (!response.ok) {
+      //     throw new Error('Failed to start monitoring');
+      //   }
+      //   return response.json();
+      // })
+      // .then(data => {
+      //   console.log('Monitoring started:', data);
+      // })
+      // .catch(error => {
+      //   console.error('Error starting monitoring:', error);
+      // });
+    }
+  }, 
+  
+  [isSwitchOn, id, owner, appliance, applianceObject.lastSwitchedOn]);
 
   const toggleSwitch = async () => {
     const newSwitchState = !isSwitchOn;
@@ -159,7 +194,7 @@ export function ApplianceComponent({ applianceObject, onToggleSwitch}) {
       owner: owner,
       appliance: appliance,
       switchState: newSwitchState,
-      lastSwitchedOn: newSwitchState ? new Date() : applianceObject.lastSwitchedOn
+      lastSwitchedOn: newSwitchState ? new Date() : null
     };
     console.log("data", data);
 
@@ -172,7 +207,23 @@ export function ApplianceComponent({ applianceObject, onToggleSwitch}) {
         body: JSON.stringify(data),
       });
 
-      onToggleSwitch(data);
+      if (!res.ok) {
+        throw new Error('Failed to update switch');
+      }
+
+      onToggleSwitch(data); // Call the callback function with the updated data
+
+      // if (newSwitchState) {
+      //   // Call the monitoring API endpoint if the switch is turned on
+      //   await fetch('/api/monitorAppliance', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify(data),
+      //   });
+      // } 
+
     } catch (error) {
       console.error('Failed to update switch:', error);
       setIsSwitchOn(!newSwitchState); // Revert the switch state if the update fails
@@ -198,65 +249,4 @@ export function ApplianceComponent({ applianceObject, onToggleSwitch}) {
       </div>
     </div>
   );
-}
-
-
-function sendEmail(owner, appliance) {
-  console.log('sendEmail triggered for:', owner, appliance); // Log the triggered email
-
-  const emailContent = `Hello ${owner},
-
-  The ${appliance} has been on for more than 5 seconds.
-
-  Please turn it off if not in use.`;
-
-
-
-  fetch('/api/sendEmail', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({owner, appliance, emailContent}),
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Failed to send email');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Email sent successfully:', data);
-  })
-  .catch(error => {
-    console.error('Error sending email:', error);
-  });
-}
-
-export function ApplianceMonitor({ applianceObject }) {
-  const { owner, appliance, lastSwitchedOn } = applianceObject;
-  const [isSwitchOn] = useState(applianceObject.switch);
-
-  useEffect(() => {
-    if (isSwitchOn) {
-      console.log('switch is on for:', owner, appliance, isSwitchOn, lastSwitchedOn)
-
-      const interval = setInterval(() => {
-        const now = new Date();
-        const timeDiff = now - new Date(lastSwitchedOn);
-        const secondsDiff = timeDiff / 1000; // Calculate the difference in seconds
-        console.log('secondsDiff:', secondsDiff)
-
-        if (secondsDiff > 10) { // Check if the difference is more than 5 seconds
-          console.log('triggering sendEmail for:', owner)
-          sendEmail(owner, appliance);
-          clearInterval(interval);
-        }
-      }, 10000); // , 1800000ms = 30mins, 10000ms = 10s
-
-      return () => clearInterval(interval);
-    }
-  }, [isSwitchOn, lastSwitchedOn, owner, appliance]);
-
-  return null;
 }

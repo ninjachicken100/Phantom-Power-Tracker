@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { AddApplianceComponent, ApplianceComponent, ApplianceMonitor } from '../src/components/PageComponents';
+import { AddApplianceComponent, ApplianceComponent } from '../src/components/PageComponents';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -16,15 +16,18 @@ export default function Home() {
         throw new Error('Network response was not ok');
       }
       const data = await res.json();
+      console.log('Fetched data:', data); // Log the fetched data
+
       // Preprocess the data to match the expected keys
       const processedData = data.map(item => ({
         id: item.id, 
         owner: item.owner,
         appliance: item.appliance,
-        switch: item.switch
+        switch: item.switch,
+        lastSwitchedOn: item.lastSwitchedOn
       }));
 
-      // console.log('Processed data:', processedData); // Log the processed data
+      console.log('Processed data:', processedData); // Log the processed data
 
       if (Array.isArray(processedData)) {
         setItems(processedData);
@@ -43,13 +46,11 @@ export default function Home() {
         item.id === updatedAppliance.id ? updatedAppliance : item
       )
     );
+    console.log('Updated appliance:', updatedAppliance);
   };
-
-  
 
   return (
     <div>
-
       <div className="page-title">
         <h1>Family Appliances</h1>
       </div>
@@ -60,16 +61,12 @@ export default function Home() {
             applianceObject={item}
             onToggleSwitch={handleToggleSwitch}
           />
-          {item.switch && <ApplianceMonitor applianceObject={item} />}
         </div>
       ))}
       
       <div className="room-component-padding">
         <AddApplianceComponent />
       </div>
-
-      
-
     </div>
   );
 }

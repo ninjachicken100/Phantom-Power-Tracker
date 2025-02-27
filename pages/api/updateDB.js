@@ -30,13 +30,15 @@ export default async function handler(req, res) {
         updateData.lastSwitchedOn = new Date(lastSwitchedOn);
       }
 
-      await collection.findOneAndUpdate(
+      const result = await collection.findOneAndUpdate(
         { id: id },
         { $set: updateData },
         { returnDocument: 'after' } // Use returnDocument: 'after' to return the updated document
       );
 
-      res.status(200);
+      // console.log('result:',result)
+        
+      res.status(200).json({ message: 'Appliance updated successfully'});
       console.log("Appliance updated successfully:");
     } catch (error) {
       console.error('Error updating appliance:', error); // Log the error

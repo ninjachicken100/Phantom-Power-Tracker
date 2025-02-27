@@ -1,46 +1,40 @@
 "use client";
 
 import "./globals.css";
-import Navbar, {FooterComponent, ApplianceMonitor} from "../src/components/PageComponents";
-import { useEffect, useState } from 'react';
+import Navbar, {FooterComponent} from "../src/components/PageComponents";
+import { useEffect } from 'react';
 
 export default function RootLayout({ children }) {
-  const [appliances, setAppliances] = useState([]);
-
   useEffect(() => {
-    const fetchAppliances = async () => {
-      try {
-        const res = await fetch('/api/getAllData');
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await res.json();
-        setAppliances(data);
-      } catch (error) {
-        console.error('Failed to fetch appliances:', error);
+    fetch('http://localhost:3000/api/monitorAppliance', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to start monitoring');
       }
-    };
-
-    fetchAppliances();
-  }, []);
-
+      return response.json();
+    })
+    .then(data => {
+      console.log('Monitoring started:', data);
+    })
+    .catch(error => {
+      console.error('Error starting monitoring:', error);
+    });
+  }, []); // Empty dependency array ensures this runs only once
 
   return (
     <html lang="en">
       <body>
-        
         <div>
           <Navbar />
         </div>
 
         {children}
-        
-        <div>
-        {appliances.map((applianceObject, index) => (
-          <ApplianceMonitor key={index} applianceObject={applianceObject} />
-        ))}
-        </div>
-        
 
         <div style={{ textAlign: "left", paddingLeft: "2rem", fontWeight: "bold", fontFamily: "Arial", fontSize: "2rem" }}>
           Remember to..

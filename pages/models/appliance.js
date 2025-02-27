@@ -6,7 +6,7 @@ const ApplianceSchema = new mongoose.Schema({
   appliance: { type: String, required: true },
   switch: { type: Boolean, required: true },
   lastSwitchedOn: { type: Date, required: true, default: Date.now },
-});
+}, { collection: 'familyappliances' }); // Explicitly specify the collection name
 
 const Appliance = mongoose.models.Appliance || mongoose.model('Appliance', ApplianceSchema);
 
