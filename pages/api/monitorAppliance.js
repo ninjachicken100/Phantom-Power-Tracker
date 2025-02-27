@@ -44,16 +44,18 @@ export default async function handler(req, res) {
             const hoursDiff = timeDiff / (1000 * 60 * 60); // Calculate the difference in hours
             const secondsDiff = timeDiff / 1000; // Calculate the difference in seconds
             
+            // const timeLimit = hoursDiff
+            const timeLimit = secondsDiff 
             
             // if (hoursDiff > 3) { // Check if the difference is more than 3 hours
-            if (secondsDiff > 30) { // Check if the difference is more than 3 seconds
+            if (secondsDiff > 10 ) { // Check if the difference is more than 3 seconds
               console.log('triggering sendEmail for:', owner);
               await fetch('http://localhost:3000/api/sendEmail', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ owner, appliance }),
+                body: JSON.stringify({ owner, appliance, timeLimit }),
               })
               .then(response => {
                 if (!response.ok) {

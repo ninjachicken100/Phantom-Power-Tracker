@@ -4,11 +4,13 @@ import path from 'path';
 export default async function handler(req, res) {
 
   if (req.method === 'POST') {
-    const { owner, appliance } = req.body;
+    const { owner, appliance, timeLimit } = req.body;
+
+    let timeLimitString = (timeLimit / 60).toFixed(0).toString() + ' minutes';
 
     const emailContent = `
   <p>Hello ${owner},</p>
-  <p>The <strong>${appliance}</strong> has been turned on <span style="color: red;"><strong>for more than ${timeDiff}</strong></span>.</p>
+  <p>The <strong>${appliance}</strong> has been turned on <span style="color: red;"><strong>for more than ${timeLimitString}</strong></span>.</p>
   <p><strong>Please turn it off</strong> if not in use.</p>
   <br>
   <p>Thank you,</p>
