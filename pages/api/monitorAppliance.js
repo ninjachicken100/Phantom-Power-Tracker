@@ -68,7 +68,7 @@ export default async function handler(req, res) {
               })
               .catch(error => {
                 console.error('Error sending email:', error);
-              });
+              }); 
             }
           }
         } catch (error) {
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
           clearInterval(intervalId); // Clear the interval if there's an error
         }
       // }, 30 * 60 * 1000); // Check every 30 minutes
-      }, 20 * 1000); // Check every 20s
+      }, 60 * 1000); // Check every 60s
 
       res.status(200).json({ message: 'Monitoring started' });
     } catch (error) {

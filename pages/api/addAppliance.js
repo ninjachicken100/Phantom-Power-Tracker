@@ -12,7 +12,7 @@ async function getNextSequenceValue(client, sequenceName) {
     const highestId = highestIdDoc.length > 0 ? highestIdDoc[0].id : 0;
     console.log('highest Id:', highestId);
     
-    const nextId = highestId + 2;
+    const nextId = highestId + 1;
     
     return nextId;
   }

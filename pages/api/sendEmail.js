@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const emailContent = `
   <p>Hello ${owner},</p>
   <p>The <strong>${appliance}</strong> has been turned on <span style="color: red;"><strong>for more than ${timeLimitString}</strong></span>.</p>
-  <p><strong>Please turn it off</strong> if not in use.</p>
+  <p>Please turn it off if not in use :)</p>
   <br>
   <p>Thank you,</p>
   <p><strong>Courtesy of PhantomPowerTracker</strong></p>

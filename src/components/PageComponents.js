@@ -11,7 +11,7 @@ export default function NavbarComponent() {
       <div>
         <nav className="navbar-look">
           <div className="logo-container">
-            <Image src={Logo} alt="Phantom Logo" width={500} height={200} />
+            <Image src={Logo} alt="Phantom Logo" width={350} height={200} style={{ paddingTop: '1rem' }} />
           </div>
           
         </nav>
@@ -62,8 +62,8 @@ export function AddApplianceModal({ isOpen, onClose, onSubmit }) {
             <option value="parents">Parents</option>
             <option value="mom">Mom</option>
             <option value="dad">Dad</option>
-            <option value="younger bro">younger brother</option>
-            <option value="older bro">older brother</option>
+            <option value="younger brother">younger brother</option>
+            <option value="older brother">older brother</option>
           </select>
           
           <label >
